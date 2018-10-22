@@ -60,37 +60,45 @@ Immediately before the time 2ms
 #include<stdio.h>
 
 int main(){
-	unsigned short t, n, arr[3], time[3], i;
+	unsigned long int arr[3], temp;
+	unsigned short n, t, active, counter[3], i;
 	
 	scanf("%hu", &t);
 
 	while(t--){
 		scanf("%hu",&n);
 		arr[0]=1, arr[1]=0, arr[2]=0;
-		time[0]=0, time[1]=0, time[2]=0;
+		counter[0]=0,counter[1]=0,counter[2]=0;
+		active=0;
 
-		for (i=1; i<n; ++i){
+		for (i=1; i<n;++i){
+			++counter[active];
 			// bits
-			if( i%2==0 && arr[0]>0 ){
-				--time[0];
-				++time[1];
+			if( counter[0]==2 ){
+				temp=arr[0];
+				arr[1]+=temp;
+				arr[0]-=temp;
+				counter[0]=0;
+				active=1;
 			}
-			
 			// nibbles
-			if( i%8==0 && arr[1]>0 && i>10){
-				--time[1];
-				++time[2];
+			else if( counter[1]==8 ){
+				temp=arr[1];
+				arr[2]+=temp;
+				arr[1]-=temp;
+				counter[1]=0;
+				active=2;
 			}
-			
 			// bytes
-			if( i%16==0 && arr[2]>1 && i>26){
-				time[1]+=2;
-				time[2]-=2;
+			else if( counter[2]==16 ){
+				temp=arr[2];
+				arr[0]+=temp*2;
+				arr[2]-=temp;
+				counter[2]=0;
+				active=0;
 			}
-
-			arr[0]=time[0], arr[1]=time[1], arr[2]=time[2];
 		}
-		printf("%d %d %d\n", arr[0], arr[1], arr[2]);
+		printf("%lu %lu %lu\n", arr[0], arr[1], arr[2]);
 	}
 	return 0;
 }
