@@ -50,65 +50,43 @@ Example Output
 Dee
 */
 
-#include<iostream> 
-#include<string>
-
+#include<iostream>
 using namespace std;
 
-unsigned short int t, n, i, temp_str_len, st_no;
-string boolean_str[50], str;
-bool turn_of_dee=false, no_win;
-
-void stack_no( char cond ){
-	temp_str_len=0; // length max
-	st_no=-1;
-
-	for(i=0; i<n; ++i){
-		if( boolean_str[i].length() > temp_str_len && cond==boolean_str[i][0] ){
-			st_no=i;
-			cout << st_no << endl << boolean_str[i];
-		}
-	}
-}
-
 int main(){
-	
+	unsigned short int t, n, i, dee_count, dum_count;
+	string turn, stack_str;
+
 	scanf("%hu", &t);
 
 	while(t--){
-		cin >> n >> str;
-		
-		for(i=0; i<n; ++i){
-			cin >> boolean_str[i];
-		}
+		cin >> n >> turn;
 
-		str=="Dee"? turn_of_dee=true: turn_of_dee=false;
-		no_win=true;
+		dee_count=0;
+		dum_count=0;
 		
-		while( no_win ){
+		for( i=0; i<n; ++i ){
+			cin >> stack_str;
 
-			if( turn_of_dee ){
-				stack_no('0');
-				if( st_no==-1 ){
-					str="Dee";
-					no_win=false;
-				}else{
-					boolean_str[i].erase(0, 1);
-					turn_of_dee=false;
+			if( stack_str[0]==stack_str[stack_str.length()-1] ){ // first and last same
+				if( stack_str[0]=='0' ){ // both 0
+					++dee_count;
+				}else{ // both 1
+					++dum_count;
 				}
-			}else{
-				stack_no('1');
-				if( st_no==-1 ){
-					str="Dum";
-					no_win=false;
-				}else{
-					boolean_str[i].erase(0, 1);
-					turn_of_dee=true;
+			}else{ // first and last not same
+				if( stack_str[stack_str.length()-1]=='0' ){ // last one 0
+					++dee_count;
+				}else{ // last one 1
+					++dum_count;
 				}
 			}
 		}
-
-		cout << str << "\n";
+		if( dee_count==dum_count ){ // same counts, first wins
+			cout << turn << "\n";
+		}else{ // lower count wins
+			cout << ( dee_count<dum_count ? "Dee\n": "Dum\n") ;
+		}
 	}
 	return 0;
 }
